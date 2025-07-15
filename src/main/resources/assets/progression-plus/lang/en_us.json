@@ -1,0 +1,30 @@
+{
+  "gui.progression-plus.upgrade_menu": "Upgrade Menu",
+  "key.progression-plus.open_menu": "Open Upgrade Menu",
+  "category.progression-plus.keys": "Progression+",
+
+  "upgrade.progression-plus.level": "Level",
+
+  "upgrade.progression-plus.strength": "Strength",
+  "upgrade.progression-plus.endurance": "Endurance",
+  "upgrade.progression-plus.agility": "Agility",
+  "upgrade.progression-plus.luck": "Luck",
+  "upgrade.progression-plus.mining_speed": "Mining Speed",
+
+  "upgrade.progression-plus.attributes": "Attributes",
+  "upgrade.progression-plus.indicators": "Indicators",
+  "upgrade.progression-plus.defense": "Defense",
+
+  "defense.progression-plus.endurance_health_bonus":  "Physical Damage",
+  "defense.progression-plus.strength_damage_bonus":   "Explosive Damage",
+  "defense.progression-plus.agility_deffense_bonus":  "Poison Damage",
+  "defense.progression-plus.luck_bonus":              "Magic Damage",
+  "defense.progression-plus.mining_speed_bonus":      "Fire Damage",
+
+  "indicator.progression-plus.hp_bonus":            "Health Bonus",
+  "indicator.progression-plus.damage_bonus":        "Damage Bonus",
+  "indicator.progression-plus.speed_bonus":         "Speed Bonus",
+  "indicator.progression-plus.mining_speed_bonus":  "Mining Speed Bonus",
+
+  "upgrade.progression-plus.required_exp": "Next Level Experience"
+}

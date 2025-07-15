@@ -1,0 +1,54 @@
+{
+	"schemaVersion": 1,
+	"id": "progression-plus",
+	"version": "1.0.0",
+	"name": "progression-plus",
+	"description": "Player progression system",
+	"authors": [
+		"Vurbin"
+	],
+	"contact": {
+		"homepage": "https://t.me/Vitalas_P",
+		"sources": "https://github.com/vitaliy65/progression-plus"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/progression-plus/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.progressionplus.Progressionplus"
+		],
+		"client": [
+			"com.progressionplus.ProgressionplusClient"
+		],
+		"cardinal-components": [
+			"com.progressionplus.data.PlayerComponents"
+		],
+		"fabric-datagen": [
+			"com.progressionplus.ProgressionplusDataGenerator"
+		]
+	},
+	"custom": {
+		"cardinal-components": [
+			"progression-plus:upgrades"
+		]
+	},
+	"mixins": [
+		"progression-plus.mixins.json",
+		{
+			"config": "progression-plus.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*",
+		"cardinal-components-base": ">=6.3.0",
+		"cardinal-components-entity": ">=6.3.0"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

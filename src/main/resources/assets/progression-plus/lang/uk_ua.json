@@ -1,0 +1,30 @@
+{
+  "gui.progression-plus.upgrade_menu": "Меню прокачки",
+  "key.progression-plus.open_menu": "Відкрити меню прокачки",
+  "category.progression-plus.keys": "Progression+",
+
+  "upgrade.progression-plus.level": "Рівень",
+
+  "upgrade.progression-plus.strength": "Сила",
+  "upgrade.progression-plus.endurance": "Витривалість",
+  "upgrade.progression-plus.agility": "Спритність",
+  "upgrade.progression-plus.luck": "Удача",
+  "upgrade.progression-plus.mining_speed": "Швидкість добування",
+
+  "upgrade.progression-plus.attributes": "Атрибути",
+  "upgrade.progression-plus.indicators": "Показники",
+  "upgrade.progression-plus.defense": "Захист",
+
+  "defense.progression-plus.endurance_health_bonus":  "Фізична шкода",
+  "defense.progression-plus.strength_damage_bonus":   "Вибухова шкода",
+  "defense.progression-plus.agility_deffense_bonus":  "Отруєння",
+  "defense.progression-plus.luck_bonus":              "Магічна шкода",
+  "defense.progression-plus.mining_speed_bonus":      "Горіння",
+
+  "indicator.progression-plus.hp_bonus":            "Здоров'я",
+  "indicator.progression-plus.damage_bonus":        "До шкоди",
+  "indicator.progression-plus.speed_bonus":         "До швидкості",
+  "indicator.progression-plus.mining_speed_bonus":  "До швидкості добування",
+
+  "upgrade.progression-plus.required_exp": "Наст. рівень"
+}

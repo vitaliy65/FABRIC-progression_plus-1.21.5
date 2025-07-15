@@ -1,0 +1,30 @@
+{
+  "gui.progression-plus.upgrade_menu": "Меню прокачки",
+  "key.progression-plus.open_menu": "Открыть меню прокачки",
+  "category.progression-plus.keys": "Progression+",
+
+  "upgrade.progression-plus.level": "Уровень",
+
+  "upgrade.progression-plus.strength": "Сила",
+  "upgrade.progression-plus.endurance": "Выносливость",
+  "upgrade.progression-plus.agility": "Ловкость",
+  "upgrade.progression-plus.luck": "Удача",
+  "upgrade.progression-plus.mining_speed": "Скорость добычи",
+
+  "upgrade.progression-plus.attributes": "Атрибуты",
+  "upgrade.progression-plus.indicators": "Показатели",
+  "upgrade.progression-plus.defense": "Защита",
+
+  "defense.progression-plus.endurance_health_bonus":  "Физический урона",
+  "defense.progression-plus.strength_damage_bonus":   "Взрывной урон",
+  "defense.progression-plus.agility_deffense_bonus":  "Отравление",
+  "defense.progression-plus.luck_bonus":              "Магический урон",
+  "defense.progression-plus.mining_speed_bonus":      "Горение",
+
+  "indicator.progression-plus.hp_bonus":            "Здоровье",
+  "indicator.progression-plus.damage_bonus":        "Бонус к урону",
+  "indicator.progression-plus.speed_bonus":         "Бонус к скорости",
+  "indicator.progression-plus.mining_speed_bonus":  "Бонус к скорости добычи",
+
+  "upgrade.progression-plus.required_exp": "След. уровень"
+}
