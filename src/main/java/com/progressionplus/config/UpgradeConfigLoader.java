@@ -41,7 +41,7 @@ public class UpgradeConfigLoader {
         try {
             CONFIG_FILE.getParentFile().mkdirs();
             Map<UpgradeType, UpgradeConfig.UpgradeSettings> defaultMap = new EnumMap<>(UpgradeType.class);
-            UpgradeConfig.init(); // заповнює UPGRADE_SETTINGS
+            UpgradeConfig.init();
             for (Map.Entry<UpgradeType, UpgradeConfig.UpgradeSettings> entry : UpgradeConfig.UPGRADE_SETTINGS.entrySet()) {
                 defaultMap.put(UpgradeType.valueOf(entry.getKey().name()), entry.getValue());
             }
