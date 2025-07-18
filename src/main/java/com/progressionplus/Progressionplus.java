@@ -1,5 +1,6 @@
 package com.progressionplus;
 
+import com.progressionplus.config.UpgradeConfigLoader;
 import com.progressionplus.data.PlayerComponents;
 import com.progressionplus.data.PlayerUpgradeData;
 import com.progressionplus.network.ModMessages;
@@ -24,8 +25,8 @@ public class Progressionplus implements ModInitializer {
 
 		// Инициализация конфигурации
 		UpgradeConfig.init();
+		UpgradeConfigLoader.load();
 		ModMessages.init();
-//		DamageEventHandler.register();
 
 		// Add player join/leave handlers
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {

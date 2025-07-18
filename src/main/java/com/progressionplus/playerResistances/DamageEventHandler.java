@@ -8,11 +8,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class DamageEventHandler {
 
-    public static void register() {
-        // Регистрируем обработчик урона
-        ServerLivingEntityEvents.ALLOW_DAMAGE.register(DamageEventHandler::onDamage);
-    }
-
     /**
      * Обработчик события получения урона
      */
