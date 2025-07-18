@@ -1,3 +1,5 @@
+[mod icon](https://github.com/vitaliy65/FABRIC-progression_plus-1.21.5/blob/master/src/main/resources/assets/progression-plus/icon.png)
+
 # 🛡️ Progression Plus (Fabric 1.21.5)
 
 **Progression Plus** is a Minecraft mod for Fabric 1.21.5 that adds a defense progression system, allowing players to improve their resistances as they level up.
