@@ -3,10 +3,12 @@ package com.progressionplus;
 import com.progressionplus.data.PlayerComponents;
 import com.progressionplus.data.PlayerUpgradeData;
 import com.progressionplus.network.ModMessages;
+import com.progressionplus.network.ServerDimensionSwitch;
 import com.progressionplus.playerResistances.DamageEventHandler;
 import net.fabricmc.api.ModInitializer;
 
 import com.progressionplus.config.UpgradeConfig;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
@@ -38,6 +40,8 @@ public class Progressionplus implements ModInitializer {
 			var upgradeData = PlayerComponents.PLAYER_UPGRADES.get(player);
 			upgradeData.logUpgrades(player);
 		});
+
+		ServerEntityEvents.ENTITY_LOAD.register(ServerDimensionSwitch::Register);
 
 		LOGGER.info("Progression+ initialized successfully!");
 	}
