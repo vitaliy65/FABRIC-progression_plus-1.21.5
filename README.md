@@ -25,3 +25,11 @@
 - The current resistance value is shown on the HUD.
 - You can configure the scaling factor (resistance per level) in config files (if available).
 - Future versions may include commands like `/pp info` or `/pp reset` for manual management.
+
+## Showcase
+Main GUI of the mod, showing the current resistance level and other information.
+(YES gui was taken from the “Heart of the Universe” season on the channel [MrLololoshka](https://www.youtube.com/@MrLololoshka))
+![gui.png](src%2Fmain%2Fresources%2Fassets%2Fprogression-plus%2Fgui.png)
+
+
+![exp_counter.png](src%2Fmain%2Fresources%2Fassets%2Fprogression-plus%2Fexp_counter.png)
