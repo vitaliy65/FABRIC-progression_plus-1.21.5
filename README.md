@@ -1,4 +1,5 @@
-![mod icon](https://github.com/vitaliy65/FABRIC-progression_plus-1.21.5/blob/master/src/main/resources/assets/progression-plus/icon.png)
+
+<img src="[https://example.com/icon.png](https://github.com/vitaliy65/FABRIC-progression_plus-1.21.5/blob/master/src/main/resources/assets/progression-plus/icon.png)" alt="Icon" width="32" height="32">
 
 # 🛡️ Progression Plus (Fabric 1.21.5)
 
