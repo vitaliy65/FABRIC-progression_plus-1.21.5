@@ -1,10 +1,11 @@
 package com.progressionplus;
 
-import com.progressionplus.attributes.ModAttributes;
 import com.progressionplus.config.UpgradeConfigLoader;
 import com.progressionplus.data.PlayerComponents;
+import com.progressionplus.data.PlayerUpgradeData;
 import com.progressionplus.network.ModMessages;
 import com.progressionplus.network.ServerDimensionSwitch;
+import com.progressionplus.playerResistances.DamageEventHandler;
 import net.fabricmc.api.ModInitializer;
 
 import com.progressionplus.config.UpgradeConfig;
@@ -26,8 +27,6 @@ public class Progressionplus implements ModInitializer {
 		UpgradeConfig.init();
 		UpgradeConfigLoader.load();
 		ModMessages.init();
-		ModAttributes.registerAttributes();
-		ModAttributes.register();
 
 		// Add player join/leave handlers
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {

@@ -2,34 +2,46 @@ package com.progressionplus.network;
 
 import com.progressionplus.Progressionplus;
 import com.progressionplus.upgrade.UpgradeType;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
-public record UpgradePayload(UpgradeType upgradeType, int level, UUID playerUuid) implements CustomPayload {
+public class UpgradePayload {
+    public static final Identifier ID = new Identifier(Progressionplus.MOD_ID, "sync_upgrades");
 
-    public static final CustomPayload.Id<UpgradePayload> ID = new CustomPayload.Id<>(Identifier.of(Progressionplus.MOD_ID, "sync_upgrades"));
+    private final UpgradeType upgradeType;
+    private final int level;
+    private final UUID playerUuid;
 
-    public static final PacketCodec<RegistryByteBuf, UpgradePayload> CODEC = PacketCodec.of(
-            (payload, buf) -> {
-                buf.writeString(payload.upgradeType.getId());
-                buf.writeInt(payload.level);
-                buf.writeUuid(payload.playerUuid);
-            },
-            (buf) -> new UpgradePayload(
-                    UpgradeType.valueOf(buf.readString().toUpperCase()),
-                    buf.readInt(),
-                    buf.readUuid()
-            )
-    );
+    public UpgradePayload(UpgradeType upgradeType, int level, UUID playerUuid) {
+        this.upgradeType = upgradeType;
+        this.level = level;
+        this.playerUuid = playerUuid;
+    }
 
+    public UpgradeType getUpgradeType() {
+        return upgradeType;
+    }
 
+    public int getLevel() {
+        return level;
+    }
 
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return ID;
+    public UUID getPlayerUuid() {
+        return playerUuid;
+    }
+
+    public void write(PacketByteBuf buf) {
+        buf.writeString(upgradeType.name());
+        buf.writeInt(level);
+        buf.writeUuid(playerUuid);
+    }
+
+    public static UpgradePayload read(PacketByteBuf buf) {
+        UpgradeType type = UpgradeType.valueOf(buf.readString().toUpperCase());
+        int level = buf.readInt();
+        UUID uuid = buf.readUuid();
+        return new UpgradePayload(type, level, uuid);
     }
 }

@@ -1,30 +1,35 @@
 package com.progressionplus.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.progressionplus.Progressionplus;
-import com.progressionplus.config.UpgradeConfig;
 import com.progressionplus.data.PlayerComponents;
 import com.progressionplus.network.ClientModMessages;
 import com.progressionplus.upgrade.UpgradeType;
 import com.progressionplus.upgrades.PlayerUpgrade;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 public class UpgradeMenu extends Screen {
     @FunctionalInterface
@@ -35,33 +40,22 @@ public class UpgradeMenu extends Screen {
 
     private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Progressionplus.MOD_ID, "textures/gui/background.png");
     private static final Identifier CARD_BACKGROUND_TEXTURE = Identifier.of(Progressionplus.MOD_ID, "textures/gui/background_player.png");
-    private static final ButtonTextures BUTTON_TEXTURES = new ButtonTextures(
-            Identifier.of(Progressionplus.MOD_ID, "stats/button_level_up"),
-            Identifier.of(Progressionplus.MOD_ID, "stats/button_level_up_disabled"),
-            Identifier.of(Progressionplus.MOD_ID, "stats/button_level_up_focused")
-    );
+    private static final Identifier BUTTON_TEXTURE = new Identifier(Progressionplus.MOD_ID, "textures/gui/button_level_up.png");
+    private static final Identifier BUTTON_TEXTURE_DISABLED = new Identifier(Progressionplus.MOD_ID, "textures/gui/button_level_up_disabled.png");
+    private static final Identifier BUTTON_TEXTURE_FOCUSED = new Identifier(Progressionplus.MOD_ID, "textures/gui/button_level_up_focused.png");
+
 
     private static final int PADDING = 13;
     private static final int TEXT_COLOR = 0xfff7cc;
     private static final int BUTTON_SIZE = 9;
 
-    private int mainBgWidth;
-    private int mainBgHeight;
-    private int mainBgX;
-    private int mainBgY;
-
-    private int cardBgWidth;
-    private int cardBgHeight;
-    private int cardBgX;
-    private int cardBgY;
+    private int mainBgWidth, mainBgHeight, mainBgX, mainBgY;
+    private int cardBgWidth, cardBgHeight, cardBgX, cardBgY;
     private float baseScale;
 
-    private int levels;
-    private int requiredTotalExp;
-
+    private int levels, requiredTotalExp;
     private PlayerUpgrade playerUpgrades;
-
-    private List<ButtonWidget> upgradeButtons = new ArrayList<>();
+    private List<DynamicTextureButtonWidget> upgradeButtons = new ArrayList<>();
 
 
 
@@ -101,19 +95,20 @@ public class UpgradeMenu extends Screen {
 
         // Размер кнопки с учетом масштаба
         int scaledButtonSize = (int)(BUTTON_SIZE * baseScale * 2.5f);
-        int scaledPadding = (int)(PADDING * baseScale * 2.5f);
+        int scaledPadding = (int)(PADDING * baseScale * 2.6f);
 
         int currentY = baseY;
 
         for (UpgradeType type : UpgradeType.values()) {
-            ButtonWidget button = createUpgradeButton(type, baseX, currentY, scaledButtonSize);
+            DynamicTextureButtonWidget button = createUpgradeButton(type, baseX, currentY, scaledButtonSize);
             this.upgradeButtons.add(button);
             currentY += scaledPadding;
         }
     }
 
-    private ButtonWidget createUpgradeButton(UpgradeType type, int x, int y, int buttonSize) {
-        ButtonWidget button = new TexturedButtonWidget(x, y, buttonSize, buttonSize, BUTTON_TEXTURES, btn -> {
+    private DynamicTextureButtonWidget createUpgradeButton(UpgradeType type, int x, int y, int buttonSize) {
+        DynamicTextureButtonWidget button = new DynamicTextureButtonWidget(x, y, buttonSize, buttonSize,0,0,0,
+                BUTTON_TEXTURE, btn -> {
             ClientModMessages.sendSyncPacketToServer(type, client.player);
 
             // Обновляем состояние всех кнопок
@@ -127,11 +122,21 @@ public class UpgradeMenu extends Screen {
     private void updateButtonStates() {
         float currentExp = client.player.totalExperience;
 
-        for (ButtonWidget button : upgradeButtons) {
+        for (DynamicTextureButtonWidget button : upgradeButtons) {
             if (currentExp >= requiredTotalExp) {
+                button.setTexture(BUTTON_TEXTURE);
                 button.active = true;
             } else {
+                button.setTexture(BUTTON_TEXTURE_DISABLED);
                 button.active = false;
+            }
+
+            if((button.isFocused() || button.isHovered()) && currentExp >= requiredTotalExp){
+                button.setTexture(BUTTON_TEXTURE_FOCUSED);
+            } else if (currentExp >= requiredTotalExp) {
+                button.setTexture(BUTTON_TEXTURE);
+            } else {
+                button.setTexture(BUTTON_TEXTURE_DISABLED);
             }
         }
     }
@@ -162,7 +167,7 @@ public class UpgradeMenu extends Screen {
         renderDefenses(context);
         renderBonusIndicators(context);
 
-        context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE,
+        context.drawTexture( BACKGROUND_TEXTURE,
                 mainBgX, mainBgY, 0, 0,
                 mainBgWidth, mainBgHeight,
                 mainBgWidth, mainBgHeight);
@@ -323,7 +328,7 @@ public class UpgradeMenu extends Screen {
     //  ---------------------  render custom player card ---------------------
     private void renderCustomPlayerCard(DrawContext context, int mouseX, int mouseY) {
         // Draw card background
-        context.drawTexture(RenderLayer::getGuiTextured, CARD_BACKGROUND_TEXTURE,
+        context.drawTexture( CARD_BACKGROUND_TEXTURE,
                 cardBgX, cardBgY, 0, 0,
                 cardBgWidth, cardBgHeight,
                 cardBgWidth, cardBgHeight);
@@ -348,12 +353,9 @@ public class UpgradeMenu extends Screen {
         // Draw player entity
         int playerScale = (int)(cardBgHeight * 0.3f);
         myDrawEntity(context,
-                cardBgX,
-                cardBgY,
-                (int)(cardBgWidth * 1.13f),
-                (int)(cardBgHeight * 1.13f),
+                cardBgX + cardBgWidth / 2,
+                cardBgY + (int)(cardBgHeight / 1.3f),
                 playerScale,
-                0.0625F,
                 mouseX,
                 mouseY,
                 client.player);
@@ -363,7 +365,7 @@ public class UpgradeMenu extends Screen {
     //  ---------------------  render custom required exp counter  ---------------------
     private void renderRequiredExpCounter(DrawContext context) {
         int x = (int)(mainBgX * 1.65f);
-        int y = (int)(mainBgY * 2.6);
+        int y = (int)(mainBgY * 2.7f);
 
         float myCurentExp = this.client.player.totalExperience;
 
@@ -410,9 +412,9 @@ public class UpgradeMenu extends Screen {
             };
 
             int tempPadding = PADDING;
-            for (var indicator : indicatorsText){
+            for (var text : indicatorsText){
                 ctx.drawTextWithShadow(this.textRenderer,
-                        Text.of(indicator),
+                        Text.of(text.getString()),
                         adjustedX, adjustedY + 60 + tempPadding, TEXT_COLOR);
                 tempPadding += PADDING;
             }
@@ -447,37 +449,50 @@ public class UpgradeMenu extends Screen {
     public boolean shouldPause() {
         return false;
     }
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {}
 
-    public static void myDrawEntity(DrawContext context, int x1, int y1, int x2, int y2, int size, float f, float mouseX, float mouseY, LivingEntity entity) {
-        float g = (float)(x1 + x2) / 2.0F;
-        float h = (float)(y1 + y2) / 2.0F;
-        context.enableScissor(x1, y1, x2, y2);
-        float i = (float)Math.atan((double)((g - mouseX) / 40.0F));
-        float j = (float)Math.atan((double)((h - mouseY) / 40.0F));
+    public static void myDrawEntity(DrawContext context, int x, int y, int size, float mouseX, float mouseY, LivingEntity entity) {
+        float f = (float)Math.atan((double)((x - mouseX) / 40.0F));
+        float g = (float)Math.atan((double)((y - size - size / 1.8f - mouseY) / 40.0F));
         Quaternionf quaternionf = (new Quaternionf()).rotateZ(3.1415927F);
-        Quaternionf quaternionf2 = (new Quaternionf()).rotateX(j * 20.0F * 0.017453292F);
+        Quaternionf quaternionf2 = (new Quaternionf()).rotateX(g * 20.0F * 0.017453292F);
         quaternionf.mul(quaternionf2);
-        float k = entity.bodyYaw;
-        float l = entity.getYaw();
-        float m = entity.getPitch();
-        float n = entity.lastHeadYaw;
-        float o = entity.headYaw;
-        entity.bodyYaw = 180.0F + i * 20.0F;
-        entity.setYaw(180.0F + i * 40.0F);
-        entity.setPitch(-j * 20.0F);
+        float h = entity.bodyYaw;
+        float i = entity.getYaw();
+        float j = entity.getPitch();
+        float k = entity.prevHeadYaw;
+        float l = entity.headYaw;
+        entity.bodyYaw = 180.0F + f * 20.0F;
+        entity.setYaw(180.0F + f * 40.0F);
+        entity.setPitch(-g * 20.0F);
         entity.headYaw = entity.getYaw();
-        entity.lastHeadYaw = entity.getYaw();
-        float p = entity.getScale();
-        Vector3f vector3f = new Vector3f(0.0F, entity.getHeight() / 2.0F + f * p, -2.0F);
-        float q = (float)size / p;
-        InventoryScreen.drawEntity(context, g, h, q, vector3f, quaternionf, quaternionf2, entity);
-        entity.bodyYaw = k;
-        entity.setYaw(l);
-        entity.setPitch(m);
-        entity.lastHeadYaw = n;
-        entity.headYaw = o;
-        context.disableScissor();
+        entity.prevHeadYaw = entity.getYaw();
+        drawEntity(context, x, y, size, quaternionf, quaternionf2, entity);
+        entity.bodyYaw = h;
+        entity.setYaw(i);
+        entity.setPitch(j);
+        entity.prevHeadYaw = k;
+        entity.headYaw = l;
+    }
+
+    public static void drawEntity(DrawContext context, int x, int y, int size, Quaternionf quaternionf, @Nullable Quaternionf quaternionf2, LivingEntity entity) {
+        context.getMatrices().push();
+        context.getMatrices().translate(x, y, 100.0);
+        context.getMatrices().multiplyPositionMatrix((new Matrix4f()).scaling((float)size, (float)size, (float)(-size)));
+        context.getMatrices().multiply(quaternionf);
+        DiffuseLighting.method_34742();
+        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
+        if (quaternionf2 != null) {
+            quaternionf2.conjugate();
+            entityRenderDispatcher.setRotation(quaternionf2);
+        }
+
+        entityRenderDispatcher.setRenderShadows(false);
+        RenderSystem.runAsFancy(() -> {
+            entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, context.getMatrices(), context.getVertexConsumers(), 15728880);
+        });
+        context.draw();
+        entityRenderDispatcher.setRenderShadows(true);
+        context.getMatrices().pop();
+        DiffuseLighting.enableGuiDepthLighting();
     }
 }

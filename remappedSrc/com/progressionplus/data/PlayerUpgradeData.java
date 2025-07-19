@@ -3,29 +3,30 @@ package com.progressionplus.data;
 import com.progressionplus.Progressionplus;
 import com.progressionplus.upgrade.UpgradeType;
 import com.progressionplus.upgrades.PlayerUpgrade;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.entity.PlayerComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.entity.RespawnableComponent;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.progressionplus.Progressionplus.LOGGER;
 
-public class PlayerUpgradeData implements Component, PlayerComponent<PlayerUpgradeData> {
+public class PlayerUpgradeData implements Component, RespawnableComponent {
     private static final Identifier UPGRADE_KEY = Identifier.of(Progressionplus.MOD_ID, "upgrades");
     private final PlayerUpgrade playerUpgrade;
+    private final PlayerEntity player;
 
     public PlayerUpgradeData(PlayerEntity player) {
         this.playerUpgrade = new PlayerUpgrade();
-
+        this.player = player;
         // Safely get player name, fallback to UUID if name is not available
         String playerIdentifier = player.getGameProfile() != null ?
                 player.getGameProfile().getName() :
                 player.getUuid().toString();
-
         LOGGER.info("Created PlayerUpgradeData for player: {}", playerIdentifier);
     }
 
@@ -43,34 +44,35 @@ public class PlayerUpgradeData implements Component, PlayerComponent<PlayerUpgra
     }
 
     @Override
-    public void readFromNbt(NbtCompound nbtCompound) {
+    public void readFromNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
         if (nbtCompound.contains(UPGRADE_KEY.toString())) {
-            NbtCompound upgradesTag = nbtCompound.getCompound(UPGRADE_KEY.toString());
             Map<String, Integer> upgrades = new HashMap<>();
 
-            for (String key : upgradesTag.getKeys()) {
-                upgrades.put(key, upgradesTag.getInt(key));
+            for (String key : nbtCompound.getKeys()) {
+                if (!key.equals(UPGRADE_KEY.toString())) {
+                    int value = nbtCompound.getInt(key).orElse(0); // This returns a primitive int
+                    upgrades.put(key, value);
+                }
             }
 
             playerUpgrade.loadUpgrades(upgrades);
 
             LOGGER.info("LOADING upgrades FROM NBT");
+            logUpgrades(player);
         }
     }
 
     @Override
-    public void writeToNbt(NbtCompound nbtCompound) {
-        if (playerUpgrade.getUpgrades().isEmpty()) return;
-
+    public void writeToNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
         Map<String, Integer> upgrades = playerUpgrade.getUpgrades();
-        NbtCompound upgradesTag = new NbtCompound();
 
         for (Map.Entry<String, Integer> entry : upgrades.entrySet()) {
-            upgradesTag.putInt(entry.getKey(), entry.getValue());
+            nbtCompound.putInt(entry.getKey(), entry.getValue());
         }
 
-        nbtCompound.put(UPGRADE_KEY.toString(), upgradesTag);
+        nbtCompound.putString(UPGRADE_KEY.toString(), "upgrades");
 
         LOGGER.info("Saving upgrades TO NBT");
+        logUpgrades(player);
     }
 }

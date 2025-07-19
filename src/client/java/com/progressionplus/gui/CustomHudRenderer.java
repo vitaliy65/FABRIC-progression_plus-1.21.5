@@ -4,8 +4,6 @@ import com.progressionplus.Progressionplus;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
 public class CustomHudRenderer implements HudRenderCallback {
@@ -14,7 +12,7 @@ public class CustomHudRenderer implements HudRenderCallback {
     private static final int HUD_TEXTURE_HEIGHT = 38;
 
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter renderTickCounter) {
+    public void onHudRender(DrawContext drawContext, float v) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.options.hudHidden) return;
 
@@ -26,7 +24,6 @@ public class CustomHudRenderer implements HudRenderCallback {
 
         // Отрисовка фоновой текстуры
         drawContext.drawTexture(
-                RenderLayer::getGuiTextured,
                 HUD_TEXTURE,
                 HUD_X,
                 HUD_Y,

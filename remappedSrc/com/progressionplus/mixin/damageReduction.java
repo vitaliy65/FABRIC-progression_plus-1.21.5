@@ -16,10 +16,10 @@ public abstract class damageReduction {
     @ModifyVariable(
             method = "damage",
             at = @At("HEAD"),
-            index = 2,
+            index = 3,
             argsOnly = true
     )
-    private float modifyDamageAmount(float amount, DamageSource source) {
+    private float modifyDamageAmount(float amount, ServerWorld world, DamageSource source) {
         if (!((Object) this instanceof ServerPlayerEntity serverPlayer)) {
             return amount;
         }

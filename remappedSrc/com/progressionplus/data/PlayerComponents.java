@@ -1,13 +1,12 @@
 package com.progressionplus.data;
 
 import com.progressionplus.Progressionplus;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 
 import static com.progressionplus.Progressionplus.LOGGER;
 
@@ -18,9 +17,7 @@ public final class PlayerComponents implements EntityComponentInitializer {
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         LOGGER.info("Registering Player Upgrade Data component for Progression+");
-
         registry.beginRegistration(PlayerEntity.class, PLAYER_UPGRADES)
-                .respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY)
                 .impl(PlayerUpgradeData.class)
                 .end(PlayerUpgradeData::new);
     }

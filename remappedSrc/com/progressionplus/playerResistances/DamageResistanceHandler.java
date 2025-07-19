@@ -62,6 +62,7 @@ public class DamageResistanceHandler {
                         damageSource.isOf(DamageTypes.CRAMMING) ||
                         damageSource.isOf(DamageTypes.DROWN) ||
                         damageSource.isOf(DamageTypes.STARVE)||
+                        damageSource.isOf(DamageTypes.MACE_SMASH) ||
                         damageSource.isOf(DamageTypes.MOB_PROJECTILE) ||
                         damageSource.isOf(DamageTypes.THORNS) ){
                     return baseResistance;
@@ -77,8 +78,7 @@ public class DamageResistanceHandler {
             }
             case AGILITY -> {
                 // Сопротивление урону от отравления
-                if (damageSource.isOf(DamageTypes.STARVE))
-                    {
+                if (damageSource.isOf(DamageTypes.STARVE)) {
                     return baseResistance;
                 }
             }
@@ -87,7 +87,8 @@ public class DamageResistanceHandler {
                 if (damageSource.isOf(DamageTypes.MAGIC) ||
                         damageSource.isOf(DamageTypes.INDIRECT_MAGIC) ||
                         damageSource.isOf(DamageTypes.WITHER) ||
-                        damageSource.isOf(DamageTypes.DRAGON_BREATH)) {
+                        damageSource.isOf(DamageTypes.DRAGON_BREATH)||
+                        damageSource.isOf(DamageTypes.ENDER_PEARL)) {
                     return baseResistance;
                 }
             }
@@ -98,6 +99,7 @@ public class DamageResistanceHandler {
                         damageSource.isOf(DamageTypes.ON_FIRE) ||
                         damageSource.isOf(DamageTypes.CACTUS) ||
                         damageSource.isOf(DamageTypes.SWEET_BERRY_BUSH) ||
+                        damageSource.isOf(DamageTypes.CAMPFIRE) ||
                         damageSource.isOf(DamageTypes.FIREBALL)) {
                     return baseResistance;
                 }

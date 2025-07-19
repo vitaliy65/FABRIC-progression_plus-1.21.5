@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"damageReduction",
+		"MiningSpeedMixin",
 		"syncUpgradesOnDeath"
 	],
 	"injectors": {
